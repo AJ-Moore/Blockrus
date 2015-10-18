@@ -521,8 +521,16 @@ void newBlock(){
 	currentBlockID = _block; 
 
 	//copys the block to the current block array 
-	for (uint8 i = 0; i < 16; i++){
-		currentBlock[i] = Block[_block][i];
+	for (uint8 _i = 0; _i < 16; _i++){
+		currentBlock[_i] = Block[_block][_i];
+	}
+
+	// If start position obstructed clear grid 
+	if (grid[gridSize.x / 2]){
+		for (int _x = 1; _x < gridSize.x-1; _x++)
+			for (int _y = 0; _y < gridSize.y; _y++)
+				grid[(_y*gridSize.x) + _x] = 0;
+			
 	}
 
 	blockPosition = Vec2(gridSize.x/2, 0);
