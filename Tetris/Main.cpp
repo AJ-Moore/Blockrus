@@ -196,7 +196,6 @@ void poll(){
 			if (keyState[SDL_SCANCODE_SPACE]){
 				if (inputElapsed > inputDelayMS){
 					inputElapsed = 0;
-					std::cout << "Space Down" << std::endl;
 					rotateBlock();
 				}
 			}
