@@ -59,7 +59,7 @@ bool gameRunning = true;
 
 //!< Game properties 
 Vec2 gridSize(12, 22);
-Vec2 windowSize(800, 600);
+Vec2 windowSize(1280, 720);
 
 //Block types enumeration 
 /**
@@ -130,7 +130,7 @@ uint8 currentBlockType = 0;
 uint8 currentBlockID = 0;
 
 // The camera distance in the scene, hardcoded for simplicity, it is tetris afterall 
-float camZDist = 0; 
+float camZDist = 20; 
 
 // Define our view and projection martices 
 glm::mat4 viewMat, projMat; 
@@ -310,7 +310,7 @@ void init(){
 	int w = 0, h = 0;
 	SDL_GetWindowSize(window, &w, &h);
 
-	glm::vec3 _position(0.0f, 0.0f, 20.0f);
+	glm::vec3 _position(0.0f, 0.0f, camZDist);
 	glm::vec3 _target(0.0f, 0.0f, 0.0f);
 	glm::vec3 _up(0.0, 1.0f, 0.0f);
 
@@ -350,8 +350,8 @@ void init(){
 		gridLinesVertices[(gridSize.x * 6) + (_y * 6) + 5] = 0.0f; 
 	}
 
-	glGenVertexArrays(1, &gridVBO);
-	glBindVertexArray(gridVBO);
+	//glGenVertexArrays(1, &gridVBO);
+	//glBindVertexArray(gridVBO);
 
 	glGenBuffers(1, &gridLinesID);
 	glGenBuffers(1, &vertexBufferID);
@@ -849,16 +849,16 @@ int loadTexture(const char* FilePath){
 		image->pixels);
 	
 	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glGenerateMipmap(GL_TEXTURE_2D);
+	//glGenerateMipmap(GL_TEXTURE_2D);
 	//Clear memory
 	SDL_FreeSurface(image);
-	//delete[] pixels;
+	//Idelete[] pixels;
 
 	return texture;//Returns the ID in opengl 
 
@@ -873,7 +873,7 @@ int main(int argc, char** argv){
 
 	IMG_Init(IMG_INIT_PNG);
 
-	window = SDL_CreateWindow("Tetris", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("Tetris", 100, 100, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL);
 	
 	if (window == NULL)
 		return 1; 
