@@ -189,7 +189,7 @@ void poll(){
 		const Uint8 *keyState = SDL_GetKeyboardState(NULL);
 		while (SDL_PollEvent(&_event)){
 			//!< QUIT GAME
-			if (keyState[SDL_SCANCODE_ESCAPE]){
+			if (keyState[SDL_SCANCODE_ESCAPE] || _event.type == SDL_QUIT){
 				gameRunning = false;
 			}
 
