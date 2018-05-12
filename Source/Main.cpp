@@ -29,6 +29,7 @@ Description: Subset of features/ demonstration, just out of the blue wanted to w
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <random>
 #include <time.h>
@@ -170,6 +171,9 @@ uint16 blockDropFaster = 30;
 uint16 blockDropMS = 600; 
 float blockDropedElapsed = 0; 
 float previousTimeElapsed = 0; 
+
+// Text stuff 
+TTF_Font* font;
 
 float inputElapsed = 0; 
 float inputDelayMS = 0; 
@@ -883,12 +887,16 @@ int main(int argc, char** argv){
 	//!< Create the OpenGl Context for this window 
 	glcontext = SDL_GL_CreateContext(window);
 
+	// Create an SDL renderer just for rendering our text, quick and dirty
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
 	glewInit();
 
-	//!<OpenGl init.. 
-	glClearColor(0, 0, 0, 1);
-	
+	TTF_Init(); 
+	font = TTF_OpenFont("arial.ttf", 25);
 
+	//!<OpenGl init.. 
+	glClearColor(0, 0, 0, 0);
 	gameRunning = true; 
 
 	//Init the game // set up viewport matrices etc.. 
@@ -896,6 +904,17 @@ int main(int argc, char** argv){
 
 	// Create first block 
 	newBlock(); 
+
+	// Add some credits in for 2018 
+	// Credit text! 
+	SDL_Color color = { 0, 0, 255 };
+	SDL_Surface* surface = TTF_RenderText_Solid(font, "Quick and dirty tetris clone by Allan Moore - 2015", color);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	int texW = 0;
+	int texH = 0;
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect dstrect = { 0, 0, texW, texH };
+
 
 	while (gameRunning){
 		//!< Update the game 
@@ -906,15 +925,22 @@ int main(int argc, char** argv){
 
 		//!< Poll for input 
 		poll();
+
+		SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+		SDL_RenderPresent(renderer);
 	}
+
+	TTF_CloseFont(font);
 
 	//Clean up 
 	glDeleteTextures(1, &blockTexture);
 
 	//Destroy the OGL Context and window 
 	SDL_GL_DeleteContext(glcontext);
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	
+	TTF_Quit();
 	SDL_Quit(); 
 	return 0; 
 
